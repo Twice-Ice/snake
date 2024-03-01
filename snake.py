@@ -4,13 +4,13 @@ import math
 from pygame import Vector2
 
 class Snake:
-	def __init__(self, pos, xScale, yScale):
+	def __init__(self, pos, xScale, yScale, length = 5):
 		self.grid = []
 		self.xScale = xScale
 		self.yScale = yScale
 		self.xTiles = SCREEN_X//xScale
 		self.yTiles = SCREEN_Y//yScale
-		self.length = 5
+		self.length = length
 		self.body = []
 		self.velo = []
 		for y in range(self.yTiles):
@@ -25,11 +25,13 @@ class Snake:
 		self.grid[math.floor(pos.x)][math.floor(pos.y)] = "X"
 
 	def update(self):
+		self.grid = [["" for i in range(self.xScale)] for i in range(self.yScale)]
+
 		for i in range(self.length-1, 0-1, -1):
 			self.velo[i] = self.velo[i - 1]
 
 		keys = pygame.key.get_pressed()
-		if keys[pygame.K_w]:
+		if True:#keys[pygame.K_w]:
 			self.velo[0] = Vector2(0, -1)
 		elif keys[pygame.K_a]:
 			self.velo[0] = Vector2(-1, 0)
@@ -40,14 +42,11 @@ class Snake:
 		else:
 			self.velo[0] = self.velo[1]
 
-		for i in range(self.length):
-			self.body[i] += self.velo[i]
+		self.body[0] += self.velo[0]
 
 		try:
-			self.grid[math.floor(self.body[0].x)][math.floor(self.body[0].y)] = "X"
-			endx = math.floor(self.body[self.length-1].x)
-			endy = math.floor(self.body[self.length-1].y)
-			self.grid[endx][endy] = ""
+			for i in range(self.length):
+				self.grid[math.floor(self.body[i].x)][math.floor(self.body[i].y)] = "X"
 		except:
 			pass
 
